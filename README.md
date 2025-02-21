@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🚀 AI-Powered Resume Analyzer & Career Coach  
 
 ## 📌 Description  
@@ -24,14 +23,10 @@ This project helps job seekers analyze their resumes, get AI-powered job recomme
 
 ### 🔹 Backend Setup  
 ```sh
-git clone https://github.com/yourusername/ai-resume-analyzer.git  
+git clone https://github.com/ggps2002/ai-resume-analyzer.git  
 cd ai-resume-analyzer  
 npm install  
 ```
 
 ### 🔹 Demo Video  
 [🔗 YouTube/Vimeo Link](#)  
-=======
-# ai-resume-analyzer
-Azure AI Developer Hackathon submission
->>>>>>> 340a32881e4121cad19c6a7baa2f00dec8372082
