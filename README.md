@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🚀 AI-Powered Resume Analyzer & Career Coach  
 
 ## 📌 Description  
@@ -30,3 +31,7 @@ npm install
 
 ### 🔹 Demo Video  
 [🔗 YouTube/Vimeo Link](#)  
+=======
+# ai-resume-analyzer
+Azure AI Developer Hackathon submission
+>>>>>>> 340a32881e4121cad19c6a7baa2f00dec8372082
