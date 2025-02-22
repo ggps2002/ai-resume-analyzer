@@ -20,7 +20,7 @@ This project helps job seekers analyze their resumes, get AI-powered job recomme
 
 ## 🚀 Installation & Setup  
 
-### 🔹 Backend Setup  
+### 🔹 Local Setup  
 ```sh
 git clone https://github.com/ggps2002/ai-resume-analyzer.git  
 cd ai-resume-analyzer  
