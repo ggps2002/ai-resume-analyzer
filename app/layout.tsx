@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { ThemeProvider } from "@/components/theme-provider"
+import "../styles/globals.css"
+import { Toaster } from "@/components/ui/sonner";
 
 
 
 export const metadata: Metadata = {
-  title: "BookWise",
+  title: "Resume",
   description:
-    "BookWise is a book borrowing university library management solution.",
+    "An AI powered application to ease your job hunt.",
 };
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
@@ -16,11 +19,12 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
 
   return (
     <html lang="en">
-      <SessionProvider session={session}>   
+      <SessionProvider session={session}>
         <body
         >
           {children}
 
+          <Toaster />
         </body>
       </SessionProvider>
     </html>

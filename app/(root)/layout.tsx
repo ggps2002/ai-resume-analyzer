@@ -1,20 +1,27 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+
 
 type LayoutProps = {
     children: React.ReactNode;
 };
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = async ({ children }) => {
+    const session = await auth();
+
+    if (!session) redirect("/login");
+
     return (
-        <html lang="en">
-            <Head>
+        <main>
+            {/* <Head>
                 <title>AI Resume Analyzer</title>
                 <meta name="description" content="Analyze your resume using AI" />
                 <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <body>
+            </Head> */}
+            <div>
                 <header>
                     <nav>
                         <ul>
@@ -31,8 +38,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <footer>
                     <p>&copy; {new Date().getFullYear()} AI Resume Analyzer. All rights reserved.</p>
                 </footer>
-            </body>
-        </html>
+            </div>
+        </main>
     );
 };
 
