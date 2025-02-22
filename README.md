@@ -10,9 +10,8 @@ This project helps job seekers analyze their resumes, get AI-powered job recomme
 ✅ **AI-Generated Cover Letters** via Azure OpenAI GPT  
 
 ## 🛠️ Tech Stack  
-- **Frontend**: Next.js (React) + Tailwind CSS  
-- **Backend**: Node.js (Express)  
-- **Database**: PostgreSQL  
+- **Frontend**: Next.js + Tailwind CSS    
+- **Database**: Neon PostgreSQL  
 - **AI Services**:  
   - Azure Form Recognizer  
   - Azure Cognitive Search  
