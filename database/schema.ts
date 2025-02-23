@@ -15,6 +15,7 @@ import {
     fullName: varchar("full_name", { length: 255 }).notNull(),
     email: text("email").notNull().unique(),
     password: text("password").notNull(),
+    Resume: text("Resume"),
     lastActivityDate: date("last_activity_date").defaultNow(),
     createdAt: timestamp("created_at", {
       withTimezone: true,

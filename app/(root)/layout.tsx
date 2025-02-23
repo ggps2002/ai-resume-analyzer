@@ -1,8 +1,14 @@
+
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import { SidebarProvider, SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
+import { cookies } from 'next/headers';
+import { CustomTrigger } from '@/components/CustomSidebarTrigger';
+import { ProfilePicture } from '@/components/ProfilePicture';
 
 
 type LayoutProps = {
@@ -14,33 +20,24 @@ const Layout: React.FC<LayoutProps> = async ({ children }) => {
 
     if (!session) redirect("/login");
 
+    const cookieStore = await cookies()
+    const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+
+
     return (
-        <main>
-            {/* <Head>
-                <title>AI Resume Analyzer</title>
-                <meta name="description" content="Analyze your resume using AI" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head> */}
-            <div>
-                <header>
-                    <nav>
-                        <ul>
-                            <li>
-                                <Link href="/">Home</Link>
-                            </li>
-                            <li>
-                                <Link href="/resume">About</Link>
-                            </li>
-                        </ul>
-                    </nav>
+        <SidebarProvider defaultOpen={defaultOpen}>
+            <AppSidebar />
+            <main className=' w-screen'>
+                <header className='flex justify-between p-4 shadow-lg bg-gray-200'>
+                    <CustomTrigger />
+                    <div className='rounded-full h-8 w-8'>
+                        <ProfilePicture />
+                    </div>
                 </header>
-                <main>{children}</main>
-                <footer>
-                    <p>&copy; {new Date().getFullYear()} AI Resume Analyzer. All rights reserved.</p>
-                </footer>
-            </div>
-        </main>
-    );
+                {children}
+            </main>
+        </SidebarProvider>
+    )
 };
 
 export default Layout;
