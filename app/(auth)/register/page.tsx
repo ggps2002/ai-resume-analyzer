@@ -6,7 +6,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div className='py-8 px-24 border border-gray-200 rounded-lg bg-white shadow-md'>
+    <div className='p-8 lg:py-8 lg:px-24 rounded-lg'>
       <AuthForm
         type="SIGN_UP"
         schema={signUpSchema}

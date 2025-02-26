@@ -216,11 +216,11 @@ a:hover {
   }
 
   .profile-name {
-    @apply text-24 font-semibold text-gray-900;
+    @apply text-16 font-semibold text-gray-900;
   }
 
   .profile-email {
-    @apply text-16 font-normal text-gray-600;
+    @apply text-14 font-normal text-gray-600;
   }
 
   .banks {
@@ -406,7 +406,7 @@ a:hover {
   }
 
   .sidebar-logo {
-    @apply 2xl:text-26 font-ibm-plex-serif text-[26px] font-bold text-black-1 max-xl:hidden;
+    @apply 2xl:text-26 font-ibm-plex-serif text-[26px] font-bold text-black-1 max-xl:text-24;
   }
 
   .sidebar-link {

@@ -46,7 +46,8 @@ export async function ProfilePicture() {
                     </div>
                     <div>
                         <p className='font-bold'></p>
-                        <p>{session.user.name}</p>
+                        <p className="profile-name">{session.user.name}</p>
+                        <p className="profile-email">{session.user.email}</p>
                     </div>
                 </PopoverContent>
             </Popover>

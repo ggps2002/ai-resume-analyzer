@@ -28,9 +28,9 @@ const Layout: React.FC<LayoutProps> = async ({ children }) => {
         <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
             <main className=' w-screen'>
-                <header className='flex justify-between p-4 shadow-lg bg-gray-200'>
+                <header className='flex justify-between p-2 items-center shadow-lg bg-gray-200'>
                     <CustomTrigger />
-                    <div className='rounded-full h-8 w-8'>
+                    <div className='rounded-full mr-4'>
                         <ProfilePicture />
                     </div>
                 </header>

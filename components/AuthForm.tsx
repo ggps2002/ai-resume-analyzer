@@ -10,7 +10,7 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 import { set, ZodType } from "zod";
-
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,6 +26,8 @@ import { FIELD_NAMES, FIELD_TYPES } from "@/constants/index";
 import { toast } from "sonner"
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 interface Props<T extends FieldValues> {
   schema: ZodType<T>;
@@ -41,6 +43,7 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: Props<T>) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const router = useRouter();
 
   const isSignIn = type === "SIGN_IN";
@@ -69,12 +72,20 @@ const AuthForm = <T extends FieldValues>({
 
   return (
     <div className="flex flex-col gap-4">
+        {/* {!isSignIn && (
+      <div className="flex items-center justify-center">
+        <Image src="/images/logo.png" alt="logo" height={40} width={40} />
+      </div>
+      <Image src="/images/logo.png" alt="logo" height={30} width={30} className="ml-1"/> 
+    )} */}
       <h1 className="text-2xl font-semibold text-center lg:text-3xl">
-        {isSignIn ? "Welcome back to Resume" : "Create your account"}
+        {isSignIn ? <div className="flex items-center justify-center">
+            <p className="text-nowrap">Welcome back 😊</p>
+          </div> : "Create your account"}
       </h1>
       <p className="text-light-200 text-[16px] text-center">
         {isSignIn
-          ? "Access the full power of AI to in your job search"
+          ? "Access the full power of AI to your job search"
           : "A.I to help you in your job search"}
       </p>
       <Form {...form}>
@@ -88,7 +99,33 @@ const AuthForm = <T extends FieldValues>({
               control={form.control}
               name={field as Path<T>}
               render={({ field }) => (
-                <FormItem>
+                FIELD_NAMES[field.name as keyof typeof FIELD_NAMES] === "Password" ? (
+                  <FormItem>
+                  <FormLabel >
+                    <div className="flex justify-between items-center gap-1">
+                    {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
+                    {
+                      passwordVisible ? <VisibilityOffOutlinedIcon fontSize="small"  onClick={() => setPasswordVisible(false)}/> : <VisibilityOutlinedIcon fontSize="small"  onClick={() => setPasswordVisible(true)} />
+                    }
+                    </div>
+                  </FormLabel>
+                  <FormControl>
+                  <div >
+                  <Input
+                      required
+                      type={
+                        passwordVisible ? "text" : "Password"
+                      }
+                      {...field}
+                      className="form-input "
+                    />
+                  </div>
+                    
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+                ) :
+                (<FormItem>
                   <FormLabel >
                     {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
                   </FormLabel>
@@ -103,7 +140,7 @@ const AuthForm = <T extends FieldValues>({
                     />
                   </FormControl>
                   <FormMessage />
-                </FormItem>
+                </FormItem>)
               )}
             />
           ))}
@@ -116,12 +153,12 @@ const AuthForm = <T extends FieldValues>({
         </form>
       </Form>
 
-      <p className="text-center  font-medium">
+      <p className="text-center  font-medium text-nowrap">
         {isSignIn ? "New to Resume? " : "Already have an account? "}
 
         <Link
           href={isSignIn ? "/register" : "/login"}
-          className="font-bold"
+          className="font-bold text-nowrap"
         >
           {isSignIn ? "Create an account" : "Sign in"}
         </Link>
