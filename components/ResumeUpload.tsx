@@ -1,13 +1,16 @@
 "use client";
 
 import { uploadToBlobStorageAndExtractTextFromResume } from "@/lib/azure";
-import { useRef, useState } from "react";
+import { Key, useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress"
+import { array } from "zod";
 
 
 export default function ResumeUpload() {
   const [progress, setProgress] = useState(0)
+  const [isUploading, setIsUploading] = useState<boolean>(false)
   const [dragActive, setDragActive] = useState<boolean>(false);
+  const [parsedDocument, setParsedDocument] = useState<any>(null)
   const inputRef = useRef<any>(null);
   const [file, setFile] = useState<any>(null);
 
@@ -27,12 +30,19 @@ export default function ResumeUpload() {
       console.log("No file has been submitted");
     } else {
       // write submit logic here
+      setIsUploading(true)
       console.log("File has been submitted", file);
-      setProgress(33)
+      for (let i = 0; i <= 97; i++) {
+        setTimeout(() => setProgress(i), i * 90);
+      }
       const response = await uploadToBlobStorageAndExtractTextFromResume(file);
       setProgress(100)
       setFile(null)
-      console.log(response);
+      setIsUploading(false)
+      let cleanedJson = response.replace(/```json\n?|```/g, '');
+      let parsedJson = JSON.parse(cleanedJson);
+      console.log(parsedJson)
+      setParsedDocument(parsedJson);
     }
   }
 
@@ -75,7 +85,7 @@ export default function ResumeUpload() {
 
   return (
     <>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center h-1/2">
         <form
           className={`${dragActive ? "bg-gray-300" : "bg-gray-200"
             } p-4 w-full rounded-lg min-h-[10rem] text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-400`}
@@ -119,8 +129,8 @@ export default function ResumeUpload() {
                   remove
                 </span>
                 <span
-                  className="text-blue-500 cursor-pointer"
-                  onClick={handleSubmitFile}
+                  className={`text-blue-500 cursor-pointer ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={!isUploading ? handleSubmitFile : undefined}
                 >
                   upload
                 </span>
@@ -136,7 +146,145 @@ export default function ResumeUpload() {
         </button> */}
         </form>
       </div>
-      <Progress value={progress} className={`mt-2 ${!progress || progress===100? "hidden" : "block"}`}/>
+      <Progress value={progress} className={`mb-1 ${!progress || progress === 100 ? "hidden" : "block"}`} />
+      {
+        parsedDocument && (
+          <div className="overflow-y-scroll h-[44%]">
+            <h1 className="text-center text-[2rem] font-bold">{parsedDocument.name}</h1>
+            <div>
+              <h2 className="font-semibold text-[1.5rem]">CONTACT</h2>
+              {Object.entries(parsedDocument.contact).map(([key, value]) => (
+                <p key={key} className="text-lg"><span className="font-medium">{key}</span>: {String(value) || "N/A"}</p>
+              ))}
+            </div>
+            <div className="mt-1">
+              <h2 className="font-semibold text-[1.5rem]">EDUCATION</h2>
+              {
+                parsedDocument.education.map((doc: { [s: string]: unknown; } | ArrayLike<unknown>) => (
+                  Object.entries(doc).map(([key, value]) => (
+                    <p key={key} className="text-lg"><span className="font-medium">{key}</span>: {String(value) || "N/A"}</p>
+                  ))
+                ))
+              }
+            </div>
+            <div className="mt-1">
+              <h2 className="font-semibold text-[1.5rem]">EXPERIENCE</h2>
+              {
+                parsedDocument.experience.map((doc: { [s: string]: unknown; } | ArrayLike<unknown>, index: number) => (
+                  <div key={index} className="flex">
+                    <h3 className="font-semibold text-lg mr-2">{index + 1}. </h3>
+                    <div>
+                      {
+                        Object.entries(doc).map(([key, value]) => (
+                          <div key={key}>
+                            <div key={key} className="text-lg"><span className="font-medium">{key}</span>: {
+                              Array.isArray(value) ? (
+                                <ul>
+                                  {
+                                    value.map((str, idx) => (
+                                      <li key={idx}>
+                                        {idx+1}. {str}
+                                      </li>
+                                    ))
+                                  }
+                                </ul>
+                              ) : (
+                                String(value)
+                              )
+                            }</div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <div className="mt-1">
+              <h2 className="font-semibold text-[1.5rem]">INTERNSHIPS</h2>
+              {
+                parsedDocument.internships?.map((doc: { [s: string]: unknown; } | ArrayLike<unknown>, index: number) => (
+                  <div key={index} className="flex">
+                    <h3 className="font-semibold text-lg mr-2">{index + 1}. </h3>
+                    <div>
+                      {
+                        Object.entries(doc).map(([key, value]) => (
+                          <div key={key}>
+                            <div key={key} className="text-lg"><span className="font-medium">{key}</span>: {
+                              Array.isArray(value) ? (
+                                <ul>
+                                  {
+                                    value.map((str, idx) => (
+                                      <li key={idx}>
+                                        {idx+1}. {str}
+                                      </li>
+                                    ))
+                                  }
+                                </ul>
+                              ) : (
+                                String(value)
+                              )
+                            }</div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <div className="mt-1">
+              <h2 className="font-semibold text-[1.5rem]">PROJECTS</h2>
+              {
+                parsedDocument.projects?.map((doc: { [s: string]: unknown; } | ArrayLike<unknown>, index: number) => (
+                  <div key={index} className="flex">
+                    <h3 className="font-semibold text-lg mr-2">{index + 1}. </h3>
+                    <div>
+                      {
+                        Object.entries(doc).map(([key, value]) => (
+                          <div key={key}>
+                            <div key={key} className="text-lg"><span className="font-medium">{key}</span>: {
+                              Array.isArray(value) ? (
+                                <ul>
+                                  {
+                                    value.map((str, idx) => (
+                                      <li key={idx}>
+                                        {idx+1}. {str}
+                                      </li>
+                                    ))
+                                  }
+                                </ul>
+                              ) : (
+                                String(value)
+                              )
+                            }</div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <div className="mt-1">
+              <h2 className="font-semibold text-[1.5rem]">SKILLS</h2>
+              {
+                <div className="flex gap-2 text-sm mt-1 flex-wrap">
+                  {
+                     parsedDocument.skills?.map((skill: string, index: number) => (
+                      <div key={index}>
+                        <div className="bg-gray-200 rounded-lg flex justify-center items-center text-center p-2">
+                          <p>{skill}</p>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        )
+      }
     </>
 
   );

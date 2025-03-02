@@ -1,8 +1,12 @@
+import { auth } from '@/auth';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 import React from 'react';
 
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Layout: React.FC<{ children: React.ReactNode }> = async ({ children }) => {
+    const session = await auth()
+    if (session) redirect("/")
     return (
         <main className=' lg:overflow-hidden lg:flex w-screen h-screen'>
             <section className='w-1/2 h-full relative hidden lg:block'>

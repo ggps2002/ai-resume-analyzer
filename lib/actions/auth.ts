@@ -82,3 +82,7 @@ export const signUp = async (params: AuthCredentials) => {
     return { success: false, error: "Signup error" };
   }
 };
+
+export async function handleOAuthSignIn(oauth : string) {
+  await signIn(oauth);
+}

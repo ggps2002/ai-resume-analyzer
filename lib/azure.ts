@@ -1,5 +1,7 @@
 import config from "./config";
 import { BlobServiceClient } from "@azure/storage-blob";
+import { getLLMResponse } from "./llm";
+
 
 // Azure Config Variables
 const storageConnectionString = config.env.azureStorageAccountNameConnectionString;
@@ -45,8 +47,8 @@ export async function uploadToBlobStorageAndExtractTextFromResume(file: File): P
         });
         if(!response) throw new Error("Cant resolve response from api");
         const data = await response.json();
-        console.log("Analysis Result:", data);
-        return data;
+        const llmResponse = await getLLMResponse(data.text);
+        return llmResponse;
     } catch (error) {
         console.error("Error analyzing document:", error);
     }
