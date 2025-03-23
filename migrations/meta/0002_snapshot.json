@@ -1,6 +1,6 @@
 {
-  "id": "902884ae-c59f-4bef-8af5-97ad35505547",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "4dccac3a-e05b-414d-b7e8-19027542311f",
+  "prevId": "2badb0c2-3255-4c2d-8a9b-f1384bb2bbe9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -273,8 +273,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "userSetName": {
+          "name": "userSetName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profileName": {
+          "name": "profileName",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false

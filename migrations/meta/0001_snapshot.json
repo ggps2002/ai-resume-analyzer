@@ -1,6 +1,6 @@
 {
-  "id": "902884ae-c59f-4bef-8af5-97ad35505547",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "2badb0c2-3255-4c2d-8a9b-f1384bb2bbe9",
+  "prevId": "902884ae-c59f-4bef-8af5-97ad35505547",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -272,6 +272,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "profileName": {
+          "name": "profileName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
         },
         "name": {
           "name": "name",

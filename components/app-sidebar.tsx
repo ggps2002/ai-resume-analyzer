@@ -1,7 +1,6 @@
 'use client'
 
 import { Calendar, Home, MonitorPlay, User, Search, Settings, FileText } from "lucide-react"
-
 import {
     Sidebar,
     SidebarContent,
@@ -14,16 +13,21 @@ import {
     SidebarMenuItem,
     SidebarSeparator,
     useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/menusidebar"
 import { useEffect, useState } from "react"
-import { text } from "stream/consumers"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 // Menu items.
 const items = [
     {
+        title: "Home",
+        url: "/",
+        icon: Home
+    },
+    {
         title: "Generate Cover Letter",
-        url: "#",
+        url: "/GenerateCoverLetter",
         icon: FileText,
     },
     {
@@ -33,22 +37,27 @@ const items = [
     },
     {
         title: "Job Recommendations",
-        url: "#",
+        url: "/JobRecommendations",
         icon: Search,
     },
 ]
 
 export function AppSidebar() {
+    const pathname = usePathname()
     const [isActive, setIsActive] = useState("")
-    const {
-        isMobile
-    } = useSidebar()
+    const { isMobile } = useSidebar()
+
+    useEffect(() => {
+        setIsActive(pathname)
+    }, [pathname])
+
+
     return (
-        <Sidebar collapsible={isMobile ? "icon" : "none"} className="shadow-lg h-screen">
-            <SidebarHeader >
+        <Sidebar collapsible={isMobile ? "icon" : "none"} className="h-screen border-r-2 bg-gray-50">
+            <SidebarHeader>
                 <div className="flex items-center justify-center m-2">
-                <Image src="/images/logo.png" alt="logo" height={30} width={30} />
-                <h1 className="sidebar-logo ml-1">Resume</h1>
+                    <Image src="/images/logo.png" alt="logo" height={30} width={30} />
+                    <h1 className="sidebar-logo ml-1">Resume</h1>
                 </div>
             </SidebarHeader>
 
@@ -62,8 +71,8 @@ export function AppSidebar() {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild isActive={isActive === item.title} onClick={() => setIsActive(item.title)} >
-                                        <a href={item.url} className="sidebar-link" style={{ textDecoration: "none" }}>
+                                    <SidebarMenuButton asChild isActive={isActive === item.url} onClick={() => setIsActive(item.url)}>
+                                        <a href={item.url} className={`sidebar-link ${isActive === item.url ? 'bg-blue-500' : ''}`} style={{ textDecoration: "none" }}>
                                             <item.icon />
                                             <span className="sidebar-label">{item.title}</span>
                                         </a>

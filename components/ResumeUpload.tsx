@@ -4,15 +4,36 @@ import { uploadToBlobStorageAndExtractTextFromResume } from "@/lib/azure";
 import { Key, useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress"
 import { array } from "zod";
+import { storeProfileToDatabase } from "@/lib/actions/database";
+import { Button } from "./ui/button";
+import { Loader2 } from "lucide-react";
+import NavigateBetweenResumes from "./NavigateBetweenResumes";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 
 export default function ResumeUpload() {
   const [progress, setProgress] = useState(0)
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const [dragActive, setDragActive] = useState<boolean>(false);
-  const [parsedDocument, setParsedDocument] = useState<any>(null)
+  const [parsedDocument, setParsedDocument] = useState<Profile | null>(null)
   const inputRef = useRef<any>(null);
+  const [profileName, setProfileName] = useState<string>("");
   const [file, setFile] = useState<any>(null);
+  const [uploadToDatabaseState, setUploadToDatabaseState] = useState<boolean>(false);
+  const [uploadingToDatabase, setUploadingToDatabase] = useState<boolean>(false);
+  const [isUploaded, setIsUploaded] = useState<boolean>(false);
+  const [showProfile, setShowProfile] = useState<boolean>(true);
 
   function handleChange(e: any) {
     e.preventDefault();
@@ -31,6 +52,9 @@ export default function ResumeUpload() {
     } else {
       // write submit logic here
       setIsUploading(true)
+      setUploadToDatabaseState(false);
+      setIsUploaded(false);
+      setShowProfile(false)
       console.log("File has been submitted", file);
       for (let i = 0; i <= 97; i++) {
         setTimeout(() => setProgress(i), i * 90);
@@ -42,8 +66,25 @@ export default function ResumeUpload() {
       let cleanedJson = response.replace(/```json\n?|```/g, '');
       let parsedJson = JSON.parse(cleanedJson);
       console.log(parsedJson)
+      // await storeProfileToDatabase(parsedJson)
       setParsedDocument(parsedJson);
+      setShowProfile(true);
+      setUploadToDatabaseState(true);
     }
+  }
+
+  async function handleDatabaseUpload(profileName: string) {
+    if (parsedDocument) {
+      setUploadingToDatabase(true);
+      await storeProfileToDatabase(parsedDocument, profileName);
+      setUploadingToDatabase(false);
+      setIsUploaded(true)
+    }
+  }
+
+  function handleCancelUpload() {
+    setParsedDocument(null)
+    setUploadToDatabaseState(false);
   }
 
   function handleDrop(e: any) {
@@ -84,8 +125,8 @@ export default function ResumeUpload() {
   }
 
   return (
-    <>
-      <div className="flex items-center justify-center h-1/2">
+    <div className="h-[60vh] ">
+      <div className="flex items-center justify-center">
         <form
           className={`${dragActive ? "bg-gray-300" : "bg-gray-200"
             } p-4 w-full rounded-lg min-h-[10rem] text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-400`}
@@ -146,31 +187,92 @@ export default function ResumeUpload() {
         </button> */}
         </form>
       </div>
-      <Progress value={progress} className={`mb-1 ${!progress || progress === 100 ? "hidden" : "block"}`} />
+      <div className="flex justify-between mt-2 mb-4 items-start">
+        <div className={`flex gap-2 ${!uploadToDatabaseState && "hidden"}`}>
+          {isUploaded ? (
+            <div>✅Uploaded Successfully</div>
+          ) : (<div className="flex gap-2">
+            <Button variant="secondary" disabled={uploadingToDatabase} onClick={handleCancelUpload}>
+              Cancel
+            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-blue-500 hover:bg-blue-400">Save Profile</Button>
+              </DialogTrigger>
+              <DialogOverlay className="dialog-overlay" />
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Give a profile name</DialogTitle>
+                  <DialogDescription>
+                    Give a name to the profile to uniquely identify the resume.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      placeholder="Eg. Profile#{number}"
+                      className="col-span-3"
+                      value={profileName}
+                      onChange={(e) => setProfileName(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  {uploadingToDatabase ? (
+                    <Button disabled={true} className="bg-blue-500 hover:bg-blue-400">
+                      <Loader2 className="animate-spin" />
+                      Please wait
+                    </Button>
+                  ) : (
+                    <Button className="bg-blue-500 hover:bg-blue-400" onClick={() => handleDatabaseUpload(profileName)}>
+                      Upload Details
+                    </Button>
+                  )}
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>)}
+        </div>
+        <div className={`ml-auto ${!showProfile && "hidden"}`}>
+          <NavigateBetweenResumes />
+        </div>
+      </div>
+      <Progress value={progress} className={`${!progress || progress === 100 ? "hidden" : "block"}`} />
       {
         parsedDocument && (
-          <div className="overflow-y-scroll h-[44%]">
+          <div className="overflow-y-scroll h-[50%]">
             <h1 className="text-center text-[2rem] font-bold">{parsedDocument.name}</h1>
             <div>
               <h2 className="font-semibold text-[1.5rem]">CONTACT</h2>
               {Object.entries(parsedDocument.contact).map(([key, value]) => (
-                <p key={key} className="text-lg"><span className="font-medium">{key}</span>: {String(value) || "N/A"}</p>
+                String(value).length > 0 && (<p key={key} className="text-lg"><span className="font-medium">{key}</span>: {String(value) || "N/A"}</p>)
               ))}
             </div>
             <div className="mt-1">
               <h2 className="font-semibold text-[1.5rem]">EDUCATION</h2>
               {
-                parsedDocument.education.map((doc: { [s: string]: unknown; } | ArrayLike<unknown>) => (
-                  Object.entries(doc).map(([key, value]) => (
-                    <p key={key} className="text-lg"><span className="font-medium">{key}</span>: {String(value) || "N/A"}</p>
-                  ))
+                parsedDocument.education.map((doc: Education, index: number) => (
+                  <div key={index} className="flex">
+                    <h3 className="font-semibold text-lg mr-2">{index + 1}. </h3>
+                    <div>
+                      {
+                        Object.entries(doc).map(([key, value]) => (
+                          String(value).length > 0 && (<p key={key} className="text-lg"><span className="font-medium">{key}</span>: {String(value)}</p>
+                          )))
+                      }
+                    </div>
+                  </div>
                 ))
               }
             </div>
             <div className="mt-1">
               <h2 className="font-semibold text-[1.5rem]">EXPERIENCE</h2>
               {
-                parsedDocument.experience.map((doc: { [s: string]: unknown; } | ArrayLike<unknown>, index: number) => (
+                parsedDocument.experience.map((doc: Experience, index: number) => (
                   <div key={index} className="flex">
                     <h3 className="font-semibold text-lg mr-2">{index + 1}. </h3>
                     <div>
@@ -183,7 +285,7 @@ export default function ResumeUpload() {
                                   {
                                     value.map((str, idx) => (
                                       <li key={idx}>
-                                        {idx+1}. {str}
+                                        {idx + 1}. {str}
                                       </li>
                                     ))
                                   }
@@ -203,7 +305,7 @@ export default function ResumeUpload() {
             <div className="mt-1">
               <h2 className="font-semibold text-[1.5rem]">INTERNSHIPS</h2>
               {
-                parsedDocument.internships?.map((doc: { [s: string]: unknown; } | ArrayLike<unknown>, index: number) => (
+                parsedDocument.internships?.map((doc: Experience, index: number) => (
                   <div key={index} className="flex">
                     <h3 className="font-semibold text-lg mr-2">{index + 1}. </h3>
                     <div>
@@ -216,7 +318,7 @@ export default function ResumeUpload() {
                                   {
                                     value.map((str, idx) => (
                                       <li key={idx}>
-                                        {idx+1}. {str}
+                                        {idx + 1}. {str}
                                       </li>
                                     ))
                                   }
@@ -236,7 +338,7 @@ export default function ResumeUpload() {
             <div className="mt-1">
               <h2 className="font-semibold text-[1.5rem]">PROJECTS</h2>
               {
-                parsedDocument.projects?.map((doc: { [s: string]: unknown; } | ArrayLike<unknown>, index: number) => (
+                parsedDocument.projects?.map((doc: Project, index: number) => (
                   <div key={index} className="flex">
                     <h3 className="font-semibold text-lg mr-2">{index + 1}. </h3>
                     <div>
@@ -249,7 +351,7 @@ export default function ResumeUpload() {
                                   {
                                     value.map((str, idx) => (
                                       <li key={idx}>
-                                        {idx+1}. {str}
+                                        {idx + 1}. {str}
                                       </li>
                                     ))
                                   }
@@ -271,7 +373,7 @@ export default function ResumeUpload() {
               {
                 <div className="flex gap-2 text-sm mt-1 flex-wrap">
                   {
-                     parsedDocument.skills?.map((skill: string, index: number) => (
+                    parsedDocument.skills?.map((skill: string, index: number) => (
                       <div key={index}>
                         <div className="bg-gray-200 rounded-lg flex justify-center items-center text-center p-2">
                           <p>{skill}</p>
@@ -282,10 +384,13 @@ export default function ResumeUpload() {
                 </div>
               }
             </div>
+            {/* <div className="mt-1">
+              <h2 className="font-semibold text-[1.5rem]">Query string: {parsedDocument.queryString}</h2>
+            </div> */}
           </div>
         )
       }
-    </>
+    </div>
 
   );
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useSidebar } from "@/components/ui/sidebar"
+import { useSidebar } from "@/components/ui/menusidebar"
 import MenuIcon from '@mui/icons-material/Menu';
 
 export function CustomTrigger() {

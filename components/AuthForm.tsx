@@ -191,7 +191,7 @@ const AuthForm = <T extends FieldValues>({
             />
           ))}
           <div className={`flex gap-8 ${isSignIn ? "justify-between" : "justify-center"}`}>
-            <Button type="submit" className="btn-primary" disabled={isLoading}>
+            <Button type="submit" className="btn-primary hover:bg-blue-400" disabled={isLoading}>
             {isSignIn ? (isLoading ? (<><span className="loader"></span>Signing In...</>) : "Sign In") : (isLoading ? <><span className="loader"></span>Signing Up...</> : "Sign Up")}
             </Button>
             {isSignIn && (<a href="#" className="text-[blue] text-nowrap">Forget password?</a>)}

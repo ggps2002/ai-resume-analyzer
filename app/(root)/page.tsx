@@ -17,7 +17,7 @@ const Page: React.FC = async () => {
                 </p>
             </div>
             <div className='flex-col lg:flex w-full h-3/4 p-4'>
-                <div className='xs:w-full xs:f-1/2 lg:w-1/2 lg:min-h-full bg-white border border-gray-100 shadow-lg rounded-lg p-4'>
+                <div className='xs:w-full xs:h-1/2 lg:w-1/2 lg:min-h-full border border-gray-300 shadow-lg rounded-lg p-4'>
                     <ResumeUpload />
                 </div>
                 <div className='xs:w-full xs:f-1/2 lg:w-1/2 lg:max-h-full'>
