@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { BookmarkCheck, Check, ExternalLink, Loader2, SlidersHorizontal } from 'lucide-react'
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
 import { searchJobs } from '@/lib/actions/job'
-import { dividerClasses } from '@mui/material'
 import { Badge } from './ui/badge'
 import { saveJobs } from '@/lib/actions/database'
 import { toast } from 'sonner'
@@ -26,8 +25,6 @@ function JobRecommendations({ handleToggle, jobSearchParams }: { handleToggle: (
     function handleQueryString(query: string, profileId: string) {
         setQueryString(query);
         setSelectedProfile(profileId);
-        console.log(query);
-        console.log(profileId);
     }
 
     const handleJobSearch = async () => {

@@ -32,7 +32,7 @@ const items = [
     },
     {
         title: "Interview Prep",
-        url: "#",
+        url: "/InterviewPrep",
         icon: User,
     },
     {

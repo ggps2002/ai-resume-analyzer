@@ -1,7 +1,7 @@
 "use client";
 
 import { uploadToBlobStorageAndExtractTextFromResume } from "@/lib/azure";
-import { Key, useRef, useState } from "react";
+import { Key, use, useEffect, useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress"
 import { array } from "zod";
 import { storeProfileToDatabase } from "@/lib/actions/database";
@@ -34,6 +34,15 @@ export default function ResumeUpload() {
   const [uploadingToDatabase, setUploadingToDatabase] = useState<boolean>(false);
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
   const [showProfile, setShowProfile] = useState<boolean>(true);
+
+  useEffect(() => {
+
+  }
+  , [])
+
+  // function handleQueryString(queryString: string, id: string, name: string) {
+  //   const 
+  // }
 
   function handleChange(e: any) {
     e.preventDefault();

@@ -89,14 +89,14 @@ export async function getCurrentUserProfiles() {
     const currentUserProfiles = await db
       .select()
       .from(profile)
-      .where(eq(profile.userId, loggedInUser[0].id))
-      .limit(1);
-    if (currentUserProfiles.length === 0) throw new Error("Failed to retrieve inserted profile details from the database");
+      .where(eq(profile.userId, loggedInUser[0].id));
+    if (currentUserProfiles.length === 0) return [];  
     const profiles: Array<ProfileDetails> = [];
     currentUserProfiles.forEach((profile) => {
       profiles.push({
         id: profile.id,
-        name: profile.userSetName || profile.name || "",
+        userSetName: profile.userSetName ||  "",
+        name: profile.name || "",
         queryString: profile.queryString || "",
       })
     })
@@ -144,6 +144,23 @@ export async function getSavedJobs(profileId: string) {
   }
 }
 
-function limit(arg0: number) {
-  throw new Error("Function not implemented.");
+export async function getProfileContactDetails(profileId: string) {
+  try {
+    const contactDetails = await db
+      .select()
+      .from(contact)
+      .where(eq(contact.profileId, profileId))
+      .limit(1);
+    const data  = {
+      email: contactDetails[0].email,
+      phone: contactDetails[0].phone,
+      linkedin: contactDetails[0].linkedin,
+      github: contactDetails[0].github,
+      location: contactDetails[0].location,
+      X: contactDetails[0].X
+    }
+    return data;
+  } catch (error) {
+    console.error(error)
+  }
 }
