@@ -39,11 +39,11 @@ interface Project {
 }
 
 interface Profile {
+  internships: unknown;
   name: string;
   contact: Contact;
   education: Education[];
   experience: Experience[];
-  internships: any[];
   projects: Project[];
   skills: string[];
   queryString: string;

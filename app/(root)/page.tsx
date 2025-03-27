@@ -16,13 +16,8 @@ const Page: React.FC = async () => {
                 Job search has never been easier with AI at your disposal.
                 </p>
             </div>
-            <div className='flex-col lg:flex w-full h-3/4 p-4'>
-                <div className='xs:w-full xs:h-1/2 lg:w-1/2 lg:min-h-full border border-gray-300 shadow-lg rounded-lg p-4'>
+            <div >
                     <ResumeUpload />
-                </div>
-                <div className='xs:w-full xs:f-1/2 lg:w-1/2 lg:max-h-full'>
-
-                </div>
             </div>
         </div>
     );

@@ -1,10 +1,8 @@
 
 import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import { SidebarProvider, SidebarTrigger, useSidebar } from '@/components/ui/menusidebar';
+import { SidebarProvider } from '@/components/ui/menusidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { cookies } from 'next/headers';
 import { CustomTrigger } from '@/components/CustomSidebarTrigger';

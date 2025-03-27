@@ -172,7 +172,7 @@ const CoverLetterLayout: React.FC = () => {
                 .from(element)
                 .set(options)
                 .save()
-                .catch((err: any) => console.error('PDF generation error:', err));
+                .catch((err: unknown) => console.error('PDF generation error:', err));
         }
     };
     

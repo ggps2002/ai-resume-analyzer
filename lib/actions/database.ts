@@ -4,7 +4,6 @@ import { eq, and } from "drizzle-orm";
 import { db } from "@/database/drizzle";
 import { users, contact, experience, education, projects, profile, jobs } from "@/database/schema";
 import { auth } from "@/auth";
-import { title } from "process";
 
 export async function storeProfileToDatabase(details: Profile, userSetProfileName: string) {
   const { contact: contactDetails, education: educationDetails, experience: experienceDetails, projects: projectsDetails, name: profileName, skills, queryString } = details;
@@ -162,5 +161,101 @@ export async function getProfileContactDetails(profileId: string) {
     return data;
   } catch (error) {
     console.error(error)
+  }
+}
+
+export async function getProfileInfo(profileId : string) {
+  try {
+  const profileDetails = await db
+    .select()
+    .from(profile)
+    .where(eq(profile.id, profileId))
+    .limit(1);
+  if(profileDetails.length === 0) throw new Error("No profile found"); 
+  const contactDetails = await db
+    .select()
+    .from(contact)
+    .where(eq(contact.profileId, profileId))
+    .limit(1);
+
+  const educationDetails = await db
+    .select()
+    .from(education)
+    .where(eq(education.profileId, profileId))
+
+  const experienceDetails = await db
+    .select()
+    .from(experience)
+    .where(eq(experience.profileId, profileId));
+
+  const projectDetails = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.profileId, profileId));
+ 
+  const profileData: Profile = {
+    name: profileDetails[0].name ?? "",
+    contact: {
+      email: contactDetails[0].email,
+      phone: contactDetails[0].phone,
+      linkedin: contactDetails[0].linkedin,
+      github: contactDetails[0].github,
+      location: contactDetails[0].location,
+      X: contactDetails[0].X
+    },
+    education: educationDetails.map(edu => ({
+      institution: edu.institution ?? undefined,
+      university: edu.university ?? undefined,
+      field: edu.field ?? undefined,
+      degree: edu.degree,
+      cgpa: edu.cgpa ?? undefined,
+      percentage: edu.percentage ?? undefined,
+      duration: edu.duration
+    })),
+    experience: experienceDetails.map(exp => ({
+      role: exp.role,
+      company: exp.company,
+      duration: exp.duration,
+      location: exp.location,
+      responsibilities: Array.isArray(exp.responsibilities) ? exp.responsibilities : [],
+    })),
+    projects: projectDetails.map(project => ({
+      name: project.name,
+      duration: project.duration,
+      description: Array.isArray(project.description) ? project.description : [],
+      techStack: Array.isArray(project.techStack) ? project.techStack : [],
+    })),
+    skills: profileDetails[0].skills as string[],
+    queryString: profileDetails[0].queryString ?? "",
+    internships: undefined
+  }
+  return profileData
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getSavedJobsDetails(profileId: string) {
+  try {
+    const savedJobs = await db
+      .select()
+      .from(jobs)
+      .where(eq(jobs.profileId, profileId));
+
+    return savedJobs
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+
+export async function deleteJob(id : string) {
+  try {
+    await db
+    .delete(jobs)
+    .where(eq(jobs.id, id));
+  } catch (error) {
+    console.error(error);
   }
 }

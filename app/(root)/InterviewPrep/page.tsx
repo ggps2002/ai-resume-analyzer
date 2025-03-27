@@ -1,8 +1,11 @@
 import React from 'react'
+import InterviewPrep from '@/components/InterviewCoach'
 
 function page() {
   return (
-    <div>page</div>
+    <div>
+      <InterviewPrep />
+    </div>
   )
 }
 

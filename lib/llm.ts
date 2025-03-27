@@ -141,3 +141,44 @@ Contact: {
     const response = await getGroqChatCompletion(LLMmessage, sys_prompt);
     return response.choices[0]?.message?.content || ""
 }
+
+export async function getLLMScore(question: string, answer: string) {
+    const sys_prompt = `
+        You are job interviewer and you are given a question and its answer. As a job interviewer you need to judge how well that question is answered with the given answer. You need to output only a score number string which ranges: [0, 10].You are not allowed to output anything else.
+            [7, 10] - The question is answered very well with confidence and determination. 
+            [4 , 6] - The question is answerd some what nicely but there are better ways to answer. 
+            [0, 3] - The question is not answered correctly and rather sparks even more questions
+        The message will be in this format below.
+                question : Question that is asked.
+                answer : Answer that is given for the asked question.
+
+        ✅ Give straight 0 if no answer is provided.
+    `
+    const message = ` 
+        question : ${question},
+        answer : ${answer}
+    `
+
+    const response = await getGroqChatCompletion(message, sys_prompt);
+    return response.choices[0]?.message?.content || ""
+}
+
+export async function getLLMSentiment(question: string, answer: string) {
+    const sys_prompt = `
+        You are job interviewer and you are given a question and its answer. As a job interviewer you need to judge how well that question is answered with the given answer. You need to output only a sentiment string which ranges: [positive, neutral, negative].You are not allowed to output anything else.
+            positive - The question is answered very well with confidence and determination. 
+            neutral - The question is answerd some what nicely but there are better ways to answer. 
+            negative - The question is not answered correctly and rather sparks even more questions
+        The message will be in this format below.
+                question : Question that is asked.
+                answer : Answer that is given for the asked question.
+        ✅ Give negative if no answer is provided.
+    `
+    const message = ` 
+        question : ${question},
+        answer : ${answer}
+    `
+    
+    const response = await getGroqChatCompletion(message, sys_prompt);
+    return response.choices[0]?.message?.content || ""
+}

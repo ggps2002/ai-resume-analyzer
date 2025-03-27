@@ -117,7 +117,7 @@ function JobRecommendations({ handleToggle, jobSearchParams }: { handleToggle: (
                                                     <SheetHeader>
                                                         <SheetTitle>Job Details</SheetTitle>
                                                         <SheetDescription>
-                                                            Review the details carefully and click the 'Apply' button below to be redirected to the LinkedIn job posting.
+                                                            Review the details carefully and click the &apos;Apply&apos; button below to be redirected to the LinkedIn job posting.
                                                         </SheetDescription>
                                                     </SheetHeader>
                                                     <div className=" max-w-lg h-[77%] py-4 my-[2vh] mx-auto overflow-y-scroll">
