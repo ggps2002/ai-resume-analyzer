@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@mui/material";
 import SavedJobView from "./SavedJobView";
+import Image from "next/image";
 
 export default function ResumeUpload() {
   const [progress, setProgress] = useState(0);
@@ -44,8 +45,12 @@ export default function ResumeUpload() {
       if (profileId) {
         setIsloading(true);
         const profileDets = await getProfileInfo(profileId);
+
+        // Ensure loading stops even if no profile is found
         setParsedDocument(profileDets ?? null);
         setIsloading(false);
+      } else {
+        setIsloading(false); // Stop loading if no profileId is present
       }
     };
 
@@ -466,16 +471,24 @@ export default function ResumeUpload() {
             )
           ) : (
             <>
-              <div className="flex justify-center w-full">
-                <Skeleton width={170} height={60} />
+              <div className="flex justify-center items-center">
+                <div className="text-center">
+                  <div className="flex w-full justify-center items-center">
+                    <Image
+                      src="/images/planet.png"
+                      alt="planet"
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                  <h2 className="text-lg font-semibold text-muted-foreground">
+                    No Saved Resumes
+                  </h2>
+                  <p className="text-muted-foreground text-md">
+                    Drag and drop or upload a resume to view.
+                  </p>
+                </div>
               </div>
-              <Skeleton width={120} height={40} />
-              <Skeleton width={250} />
-              <Skeleton width={250} />
-              <Skeleton width={250} />
-              <Skeleton width={250} />
-              <Skeleton width={250} />
-              <Skeleton width={250} />
             </>
           )}
         </div>

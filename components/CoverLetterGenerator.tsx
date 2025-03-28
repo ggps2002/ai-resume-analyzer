@@ -120,6 +120,8 @@ const CoverLetterLayout: React.FC = () => {
             handleGetSavedJobs(profile.profileId);
             handleGetProfileContactInfo(profile.profileId);
             setIsLoading(false);
+        } else {
+            setIsLoading(false);
         }
     }, [profile.profileId]);
 

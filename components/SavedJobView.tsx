@@ -33,13 +33,15 @@ useEffect(() => {
             try {
                 const savedJobs = await getSavedJobsDetails(id);
                 console.log("Fetched jobs:", savedJobs);
-                setJobs(savedJobs);
+                setJobs(savedJobs || []);
             } catch (error) {
                 console.error("Error fetching saved jobs:", error);
                 toast.error("Failed to fetch saved jobs.");
             } finally {
                 setLoading(false);
             }
+        } else {
+          setLoading(false);
         }
     };
 
@@ -117,7 +119,7 @@ useEffect(() => {
                   No Saved Jobs
                 </h2>
                 <p className="text-muted-foreground text-md">
-                  Saved some jobs in the job recommendation tab to view jobs.
+                  Save some jobs in the job recommendation tab to view jobs.
                 </p>
               </div>
             </div>

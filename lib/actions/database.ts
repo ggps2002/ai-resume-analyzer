@@ -133,6 +133,7 @@ export async function getSavedJobs(profileId: string) {
       .select()
       .from(jobs)
       .where(eq(jobs.profileId, profileId));
+    if (savedJobs.length === 0) return []; 
     return savedJobs.map(job => ({
       title: job.title,
       company: job.company,
@@ -150,6 +151,7 @@ export async function getProfileContactDetails(profileId: string) {
       .from(contact)
       .where(eq(contact.profileId, profileId))
       .limit(1);
+    if (contactDetails.length === 0) return;
     const data  = {
       email: contactDetails[0].email,
       phone: contactDetails[0].phone,
@@ -171,7 +173,7 @@ export async function getProfileInfo(profileId : string) {
     .from(profile)
     .where(eq(profile.id, profileId))
     .limit(1);
-  if(profileDetails.length === 0) throw new Error("No profile found"); 
+  if(profileDetails.length === 0) return; 
   const contactDetails = await db
     .select()
     .from(contact)
@@ -241,7 +243,7 @@ export async function getSavedJobsDetails(profileId: string) {
       .select()
       .from(jobs)
       .where(eq(jobs.profileId, profileId));
-
+    if (savedJobs.length === 0) return;
     return savedJobs
   } catch (error) {
     console.error(error);
