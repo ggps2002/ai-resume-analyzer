@@ -1,3 +1,7 @@
+import config from "../config";
+
+const apiEndPoint = config.env.apiEndpoint;
+
 export async function searchJobs(filters: Filters, queryString: string) {
     const params = new URLSearchParams();
   
@@ -11,7 +15,7 @@ export async function searchJobs(filters: Filters, queryString: string) {
     // Append title filter without encoding
     params.append("title_filter", queryString);
   
-    const url = `/api/job-search?${params.toString()}`;
+    const url = `${apiEndPoint}/api/job-search?${params.toString()}`;
     console.log("API Request:", url);  // Verify the correct query string
   
     const response = await fetch(url);
