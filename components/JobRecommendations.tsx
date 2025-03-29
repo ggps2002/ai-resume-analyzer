@@ -81,6 +81,17 @@ function JobRecommendations({ handleToggle, jobSearchParams }: { handleToggle: (
                 </Button>}
                 <NavigateBetweenResumes handleQueryString={handleQueryString} />
             </div>
+            <div className='overflow-x-auto flex gap-2 ml-2'>
+                {
+                    Object.entries(jobSearchParams).map(([key, value]) => (
+                        <div key={key}>
+                            <div className="bg-gray-200 rounded-lg flex justify-center items-center text-center px-2 py-1 whitespace-nowrap">
+                              <p>{key} : {value}</p>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
             <div className='overflow-y-scroll p-2 flex flex-col gap-2 h-[78vh]'>
                 {
                     jobPostData.length > 0 ? (

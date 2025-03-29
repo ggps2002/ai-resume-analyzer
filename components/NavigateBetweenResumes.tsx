@@ -52,7 +52,7 @@ function NavigateBetweenResumes({ handleQueryString = () => {}}: NavigateBetween
                 handleQueryString(selectedProfile.queryString, selectedProfile.id, selectedProfile.name);
             }
         }
-    }, [position, isMounted, profiles, handleQueryString]);
+    }, [position, isMounted, profiles]);
 
     return (
         isLoading? (
