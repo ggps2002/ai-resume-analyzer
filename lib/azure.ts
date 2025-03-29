@@ -43,6 +43,7 @@ export async function uploadToBlobStorageAndExtractTextFromResume(file: File): P
   const sendData = {
       fileUrl : blockBlobClient.url
   }
+  console.log(`url:${apiEndPoint}/api/document-to-text`)
   try {
       const response = await fetch(`${apiEndPoint}/api/document-to-text`, {
           method: "POST",
