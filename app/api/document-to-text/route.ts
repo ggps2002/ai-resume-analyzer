@@ -2,7 +2,7 @@ import { DocumentAnalysisClient, AzureKeyCredential } from "@azure/ai-form-recog
 
 import config from "@/lib/config";
 import { NextResponse } from "next/server";
-import { PrebuiltLayoutModel } from "@/prebuilt-layout";
+// import { PrebuiltLayoutModel } from "@/prebuilt-layout";
 
 export async function POST(req: Request) {
     try {
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         }
 
         const client = new DocumentAnalysisClient(endpoint, new AzureKeyCredential(key));
-        const poller = await client.beginAnalyzeDocumentFromUrl(PrebuiltLayoutModel, fileUrl);
+        const poller = await client.beginAnalyzeDocumentFromUrl("prebuilt-layout", fileUrl);
         const analyzeResult = await poller.pollUntilDone();
 
         const { pages, tables } = analyzeResult;
